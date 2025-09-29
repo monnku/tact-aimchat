@@ -6,7 +6,6 @@ const fs = require('fs');
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
-const a = require('socket.io-client')(process.env.url);
 let chatdata = [];
 app.set('trust proxy', true);
 app.use(express.static('public'));
@@ -35,9 +34,6 @@ app.get('/', (req, res) => {
   banned = ips.includes(ip);
   res.sendFile(__dirname + '/index.html');
 });
-app.get('/'+process.env.key, (req, res) => {
-  res.send(chatdata);
-});
 app.get('/rule', (req, res) => {
   res.sendFile(__dirname + '/rule.html');
 });
@@ -53,7 +49,6 @@ let forwarded = '';
 io.on('connection', (socket) => {
   forwarded = socket.request.headers['x-forwarded-for'] || socket.request.connection.remoteAddress;
   console.log('connect');
-  io.emit('conn', {'key':process.env.key});
   socket.on('send', (json) => {
     json.username = removetags(json.username);
     json.data = removetags(json.data);
@@ -71,7 +66,6 @@ io.on('connection', (socket) => {
     }
   });
   socket.on('ip', (username) => {
-    a.emit('ip', {'username':username, 'ip':forwarded.substr(0, forwarded.indexOf(',')) || socket.request.connection.remoteAddress});
     io.emit('chat', {'chatdata':chatdata, 'username':username});
   });
   socket.on('rel', (json) => {
