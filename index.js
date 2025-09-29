@@ -5,7 +5,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 import { createRequire } from 'module'; 
-const require = createRequire(import.meta.url);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
@@ -50,11 +49,13 @@ setInterval(() => {
     io.emit('users', now_users);
   }, 6000)
 }, 30000)
-let forwarded = '';
 io.on('connection', (socket) => {
-  forwarded = socket.request.headers['x-forwarded-for'] || socket.request.connection.remoteAddress;
-  console.log('connect');
-  socket.on('send', (json) => {
+    const forwardedHeader = socket.request.headers['x-forwarded-for'];
+    const forwarded = forwardedHeader 
+        ? forwardedHeader.split(',')[0].trim()
+        : socket.request.connection.remoteAddress;
+    console.log('connect');
+    socket.on('send', (json) => {
     json.username = removetags(json.username);
     json.data = removetags(json.data);
     console.log(users);
