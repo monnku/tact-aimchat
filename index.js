@@ -2,9 +2,12 @@ import express from 'express';
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io'; // socket.ioをインポートする際の推奨形式
 import path from 'path';
+import { fileURLToPath } from 'url';
 import fs from 'fs';
 import { createRequire } from 'module'; 
 const require = createRequire(import.meta.url);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const app = express();
 const server = http.createServer(app);
 const io = new SocketIOServer(server); 
