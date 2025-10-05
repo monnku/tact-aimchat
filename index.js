@@ -55,10 +55,6 @@ io.on('connection', (socket) => {
         ? forwardedHeader.split(',')[0].trim()
         : socket.request.connection.remoteAddress;
     console.log('connect');
-    socket = io({
-        path: '/socket.io', // Vercelなどの環境でSocket.IOがルーティングされる標準パス
-        transports: ['websocket', 'polling'] // WebSocketを優先
-    });
     socket.on('send', (json) => {
     json.username = removetags(json.username);
     json.data = removetags(json.data);
