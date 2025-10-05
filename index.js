@@ -9,7 +9,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
 const server = http.createServer(app);
-const io = new SocketIOServer(server); 
+const io = new SocketIOServer(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  },
+  path: "/socket.io" // デフォルトだけど明示
+});
 let chatdata = [];
 app.set('trust proxy', true);
 app.use(express.static('public'));
