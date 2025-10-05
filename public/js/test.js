@@ -129,7 +129,10 @@ function add() {
 add();
 
 function connect(){
-    socket = io();
+    socket = io({
+      path: "/socket.io",
+      transports: ["websocket"] // WebSocketを優先
+    });
     socket.on('connect',function() {
       if (localStorage.saveKey !== undefined){
         val = localStorage.saveKey;
