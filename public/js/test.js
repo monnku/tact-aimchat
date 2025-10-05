@@ -11,7 +11,9 @@ setTimeout(function(){localStorage.setItem('stime', '0')}, 30000);
 if (localStorage.getItem('id') === null){
   localStorage.setItem('id', String(Math.floor( Math.random() * 1000001)));
 }
-let socket = null;
+const socket = io("http://localhost:8080", {
+  transports: ["websocket"]
+});
 let username = null;
 var kari = '';
 var id = localStorage.getItem("id");
